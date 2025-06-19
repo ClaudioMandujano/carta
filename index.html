@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Para Vos ❤️</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #ff9a9e, #fad0c4);
+      color: #333;
+      font-family: 'Georgia', serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      flex-direction: column;
+    }
+
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      max-width: 600px;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+    }
+
+    .secret {
+      color: #e91e63;
+      cursor: pointer;
+      border-bottom: 1px dashed #e91e63;
+      transition: all 0.3s;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .secret.revealed {
+      color: #333;
+      border-bottom: none;
+      background: #ffe0e6;
+      padding: 2px 6px;
+      border-radius: 5px;
+      cursor: default;
+      white-space: normal;
+    }
+
+    .heart {
+      font-size: 2.5rem;
+      animation: heartbeat 1s infinite;
+      margin-bottom: 0.5rem;
+    }
+
+    button {
+      background-color: #e91e63;
+      border: none;
+      padding: 15px 30px;
+      color: white;
+      font-size: 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(233,29,99,0.5);
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #c2185b;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 15px;
+      }
+      .card {
+        padding: 1.5rem;
+      }
+      .secret {
+        font-size: 1.1rem;
+      }
+      button {
+        width: 100%;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card" role="main" aria-label="Carta interactiva para Jaz">
+    <div class="heart" aria-hidden="true">❤️</div>
+    <h2>Una carta para vos</h2>
+    <p>
+      Hola mi amor, te escribo esto porque <span class="secret" data-reveal="no hay un segundo que no piense en vos ❤️">te extraño</span> muchísimo.<br>
+      Cada día pienso en <span class="secret" data-reveal="es lo más hermoso que vi en mi vida ✨">tu sonrisa</span> y en lo feliz que me hacés.<br>
+      No veo la hora de <span class="secret" data-reveal="y no soltarte nunca más 🥺">abrazarte</span> fuerte de nuevo.
+    </p>
+    <p>
+      ¿Querés saber un secreto? Hacé clic en cada palabra subrayada 😉
+    </p>
+  </div>
+
+  <button id="goRasca">Descubrir mi sorpresa ❤️</button>
+
+  <script>
+    document.querySelectorAll('.secret').forEach(el => {
+      el.addEventListener('click', () => {
+        if (!el.classList.contains('revealed')) {
+          el.classList.add('revealed');
+          el.textContent = el.dataset.reveal;
+        }
+      });
+    });
+
+    document.getElementById('goRasca').addEventListener('click', () => {
+      window.location.href = 'rasca.html';
+    });
+  </script>
+
+</body>
+</html>

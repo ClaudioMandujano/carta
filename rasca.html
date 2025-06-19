@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rasca y Descubre ❤️</title>
+<style>
+  body {
+    margin: 0;
+    background: #ece5dd;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  #scratch-container {
+    position: absolute;
+    inset: 0;
+    background: #ece5dd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #hidden-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    flex-direction: column;
+    color: #333;
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 0 20px;
+  }
+  canvas {
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 2;
+  }
+  .chat {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 10px;
+    overflow-y: auto;
+  }
+  .message {
+    background: #dcf8c6;
+    padding: 12px 16px;
+    margin: 8px 0;
+    max-width: 80%;
+    border-radius: 15px 15px 0 15px;
+    align-self: flex-end;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s ease;
+  }
+  .message.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .typing {
+    align-self: flex-end;
+    background: #dcf8c6;
+    border-radius: 15px 15px 0 15px;
+    padding: 8px 12px;
+    margin: 8px 0;
+    animation: blink 1s infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+  @media (max-width: 600px) {
+    .message, .typing {
+      font-size: 1rem;
+      padding: 10px 14px;
+      max-width: 90%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="scratch-container">
+  <div id="hidden-content">
+    <p>✨ Rasca para descubrir tu sorpresa ✨</p>
+  </div>
+  <canvas></canvas>
+</div>
+
+<div class="chat" id="chat" style="display:none;"></div>
+
+<script>
+  const canvas = document.querySelector('canvas');
+  const ctx = canvas.getContext('2d');
+  const container = document.getElementById('scratch-container');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  ctx.fillStyle = '#999';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#ccc';
+  ctx.font = "24px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("Rasca aquí ✨", canvas.width/2, canvas.height/2);
+
+  let isDrawing = false;
+
+  function scratch(x, y) {
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(x, y, 30, 0, Math.PI * 2);
+    ctx.fill();
+
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let count = 0;
+    for (let i = 0; i < imgData.data.length; i += 4) {
+      if (imgData.data[i + 3] === 0) count++;
+    }
+    if (count / (imgData.data.length / 4) > 0.6) mostrarChat();
+  }
+
+  function handleEvent(e) {
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    scratch(x, y);
+  }
+
+  canvas.addEventListener('mousedown', () => isDrawing = true);
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mousemove', e => isDrawing && handleEvent(e));
+  canvas.addEventListener('touchstart', e => { isDrawing = true; handleEvent(e); }, { passive: false });
+  canvas.addEventListener('touchend', () => isDrawing = false, { passive: false });
+  canvas.addEventListener('touchmove', e => { if (isDrawing) handleEvent(e); e.preventDefault(); }, { passive: false });
+
+  function mostrarChat() {
+    container.style.display = 'none';
+    document.getElementById('chat').style.display = 'flex';
+    iniciarChat();
+  }
+
+  const mensajes = [
+  "Jaz… No tenés idea de cuánto te extraño. Las ganas que tengo de abrazarte, de besarte, de perderme en tu piel… de tocarte toda y darte mi amor con ternura, con locura, con pasión y sí desenfrenado con locura y duro también.",
+  "Quise sorprenderte con algo distinto, algo que te saque una sonrisa, que te haga sentir lo que sos para mí: todo. Espero que nunca te aburras de mí, que siempre quieras quedarte a mi lado. Pero si algún día sentís que no… igual te voy a seguir eligiendo. Porque yo no te suelto ni aunque el mundo se caiga.",
+  "Te amo con todo lo que soy. Te amo en lo bueno, en lo malo, en lo simple y en lo intenso. Sos mi deseo, mi paz, mi tentación y mi compañera. Sos la mujer con la que sueño y la que quiero para despertar.",
+  "No me alcanzan las palabras para explicarte lo que me hacés sentir. Te amo para hoy, para mañana… para siempre.",
+  "Claudio ❤️"
+];
+
+  const chat = document.getElementById('chat');
+  let index = 0;
+
+  function iniciarChat() {
+    if (index < mensajes.length) {
+      const typing = document.createElement('div');
+      typing.className = 'typing';
+      typing.textContent = 'Escribiendo...';
+      chat.appendChild(typing);
+      chat.scrollTop = chat.scrollHeight;
+
+      setTimeout(() => {
+        chat.removeChild(typing);
+
+        const msg = document.createElement('div');
+        msg.className = 'message';
+        msg.textContent = mensajes[index];
+        chat.appendChild(msg);
+        requestAnimationFrame(() => msg.classList.add('show'));
+        chat.scrollTop = chat.scrollHeight;
+
+        index++;
+        setTimeout(iniciarChat, 2000);
+      }, 1200);
+    }
+  }
+</script>
+
+</body>
+</html>
