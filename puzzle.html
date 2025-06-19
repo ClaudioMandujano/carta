@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puzzle para Vos ❤️</title>
+<style>
+  body {
+    margin: 0;
+    background: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+  #puzzle-container {
+    position: relative;
+    width: 90vw;
+    max-width: 400px;
+    aspect-ratio: 3/4;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .piece {
+    background-size: cover;
+    background-position: center;
+    touch-action: none;
+  }
+  .empty {
+    background: #333;
+  }
+  #message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    text-align: center;
+    font-size: 1.2rem;
+    display: none;
+  }
+  button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    background: #ff5e78;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<div id="puzzle-container"></div>
+
+<div id="message">
+  <h2>¡Perfecto! 🥰</h2>
+  <p>Te amo muchísimo ❤️</p>
+  <button onclick="location.href='rasca.html'">Seguir con la sorpresa</button>
+</div>
+
+<script>
+  const container = document.getElementById('puzzle-container');
+  const imgURL = 'img/lover.jpeg'; // Ruta al archivo que subiste
+
+  const rows = 3, cols = 3;
+  let pieces = [];
+  let emptyIndex = rows * cols - 1;
+
+  function init() {
+    for (let i = 0; i < rows * cols; i++) {
+      const div = document.createElement('div');
+      div.classList.add('piece');
+      if (i !== emptyIndex) {
+        div.style.backgroundImage = `url('${imgURL}')`;
+        const x = (i % cols) * 100 / (cols - 1);
+        const y = Math.floor(i / cols) * 100 / (rows - 1);
+        div.style.backgroundPosition = `${x}% ${y}%`;
+        div.dataset.index = i;
+        div.addEventListener('click', () => movePiece(i));
+      } else {
+        div.classList.add('empty');
+      }
+      pieces.push(div);
+      container.appendChild(div);
+    }
+    shuffle();
+  }
+
+  function shuffle() {
+    for (let i = 0; i < 100; i++) {
+      const neighbors = getNeighbors(emptyIndex);
+      const rand = neighbors[Math.floor(Math.random() * neighbors.length)];
+      swap(rand, emptyIndex);
+      emptyIndex = rand;
+    }
+  }
+
+  function getNeighbors(index) {
+    const neighbors = [];
+    if (index % cols !== 0) neighbors.push(index - 1);
+    if (index % cols !== cols - 1) neighbors.push(index + 1);
+    if (index >= cols) neighbors.push(index - cols);
+    if (index < cols * (rows - 1)) neighbors.push(index + cols);
+    return neighbors;
+  }
+
+  function movePiece(index) {
+    if (getNeighbors(emptyIndex).includes(index)) {
+      swap(index, emptyIndex);
+      emptyIndex = index;
+      if (isSolved()) showMessage();
+    }
+  }
+
+  function swap(i, j) {
+    container.insertBefore(pieces[i], pieces[j]);
+    [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
+  }
+
+  function isSolved() {
+    return pieces.every((piece, i) => +piece.dataset.index === i || i === emptyIndex);
+  }
+
+  function showMessage() {
+    document.getElementById('message').style.display = 'block';
+  }
+
+  init();
+</script>
+
+</body>
+</html>
