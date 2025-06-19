@@ -1,147 +1,165 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para Vos ❤️</title>
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    background-color: #000;
-    overflow: hidden;
-    height: 200vh;
-  }
-  #mensaje {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #fff;
-    text-align: center;
-    font-size: 1.4rem;
-    opacity: 0;
-    transition: opacity 2s;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Vos ❤️</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      height: 100%;
+      font-family: sans-serif;
+    }
+
+    #mensaje {
+      position: relative;
+      z-index: 10;
+      padding: 20px;
+      color: #fff;
+      text-align: center;
+      font-size: 1.2rem;
+      opacity: 0;
+      transition: opacity 2s;
+      max-width: 90%;
+      margin: 0 auto;
+      top: 60px;
+    }
+
+    @media (min-width: 768px) {
+      #mensaje {
+        font-size: 1.5rem;
+        max-width: 60%;
+        top: 100px;
+      }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+  </style>
 </head>
 <body>
 
 <canvas id="canvas"></canvas>
 
 <div id="mensaje">
- <h1>Te elijo hoy y siempre ❤️</h1>
-<p>Sos mi todo, Jaz. No me canso de amarte.</p>
-<p>Desde que llegaste a mi vida, todo tiene más color, más sentido, más amor.</p>
-<p>No hay día que no agradezca al universo por cruzarte en mi camino.</p>
-<p>Sos mi paz, mi compañera, mi abrazo después de un día largo.</p>
-<p>Te amo con el alma, con cada latido, con cada pedacito de mí.</p>
-<p>Y si me das la mano, te prometo no soltarla nunca más.</p>
-<p>Gracias por existir, por ser vos... por ser mi amor.</p>
+  <h1>Te elijo hoy y siempre ❤️</h1>
+  <p>Sos mi todo, Jaz. No me canso de amarte.</p>
+  <p>Desde que llegaste a mi vida, todo tiene más color, más sentido, más amor.</p>
+  <p>No hay día que no agradezca al universo por cruzarte en mi camino.</p>
+  <p>Sos mi paz, mi compañera, mi abrazo después de un día largo.</p>
+  <p>Te amo con el alma, con cada latido, con cada pedacito de mí.</p>
+  <p>Y si me das la mano, te prometo no soltarla nunca más.</p>
+  <p>Gracias por existir, por ser vos... por ser mi amor.</p>
 </div>
 
 <script>
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-const fireworks = [];
-const particles = [];
-const colors = ["#ff5252", "#ff4081", "#e040fb", "#7c4dff", "#40c4ff", "#00e676", "#ffff00"];
-
-function random(min, max) {
-  return Math.random() * (max - min) + min;
-}
-
-class Firework {
-  constructor() {
-    this.x = random(0, canvas.width);
-    this.y = canvas.height;
-    this.targetY = random(canvas.height / 4, canvas.height / 2);
-    this.speed = random(4, 7);
-    this.color = colors[Math.floor(Math.random() * colors.length)];
-  }
-
-  update() {
-    this.y -= this.speed;
-    if (this.y <= this.targetY) {
-      this.explode();
-      return false;
-    }
-    return true;
-  }
-
-  explode() {
-    for (let i = 0; i < 30; i++) {
-      particles.push(new Particle(this.x, this.y, this.color));
-    }
-  }
-
-  draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-    ctx.fillStyle = this.color;
-    ctx.fill();
-  }
-}
-
-class Particle {
-  constructor(x, y, color) {
-    this.x = x;
-    this.y = y;
-    this.velX = random(-3, 3);
-    this.velY = random(-3, 3);
-    this.alpha = 1;
-    this.color = color;
-  }
-
-  update() {
-    this.x += this.velX;
-    this.y += this.velY;
-    this.alpha -= 0.02;
-    return this.alpha > 0;
-  }
-
-  draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-    ctx.fillStyle = this.color;
-    ctx.globalAlpha = this.alpha;
-    ctx.fill();
-    ctx.globalAlpha = 1;
-  }
-}
-
-function animate() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  if (Math.random() < 0.05) fireworks.push(new Firework());
-
-  fireworks.forEach((fw, i) => {
-    if (!fw.update()) fireworks.splice(i, 1);
-    else fw.draw();
-  });
-
-  particles.forEach((p, i) => {
-    if (!p.update()) particles.splice(i, 1);
-    else p.draw();
-  });
-
-  requestAnimationFrame(animate);
-}
-
-animate();
-
-setTimeout(() => {
-  document.getElementById("mensaje").style.opacity = 1;
-}, 5000);
-
-window.addEventListener("resize", () => {
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-});
+
+  const fireworks = [];
+  const particles = [];
+  const colors = ["#ff5252", "#ff4081", "#e040fb", "#7c4dff", "#40c4ff", "#00e676", "#ffff00"];
+
+  function random(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  class Firework {
+    constructor() {
+      this.x = random(0, canvas.width);
+      this.y = canvas.height;
+      this.targetY = random(canvas.height / 4, canvas.height / 2);
+      this.speed = random(4, 7);
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    update() {
+      this.y -= this.speed;
+      if (this.y <= this.targetY) {
+        this.explode();
+        return false;
+      }
+      return true;
+    }
+
+    explode() {
+      for (let i = 0; i < 30; i++) {
+        particles.push(new Particle(this.x, this.y, this.color));
+      }
+    }
+
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = this.color;
+      ctx.fill();
+    }
+  }
+
+  class Particle {
+    constructor(x, y, color) {
+      this.x = x;
+      this.y = y;
+      this.velX = random(-3, 3);
+      this.velY = random(-3, 3);
+      this.alpha = 1;
+      this.color = color;
+    }
+
+    update() {
+      this.x += this.velX;
+      this.y += this.velY;
+      this.alpha -= 0.02;
+      return this.alpha > 0;
+    }
+
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = this.color;
+      ctx.globalAlpha = this.alpha;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  function animate() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (Math.random() < 0.05) fireworks.push(new Firework());
+
+    fireworks.forEach((fw, i) => {
+      if (!fw.update()) fireworks.splice(i, 1);
+      else fw.draw();
+    });
+
+    particles.forEach((p, i) => {
+      if (!p.update()) particles.splice(i, 1);
+      else p.draw();
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+  setTimeout(() => {
+    document.getElementById("mensaje").style.opacity = 1;
+  }, 5000);
+
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
 </script>
 
 </body>
