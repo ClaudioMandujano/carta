@@ -3,134 +3,139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Puzzle para Vos ❤️</title>
+<title>Para Vos ❤️</title>
 <style>
-  body {
+  html, body {
     margin: 0;
-    background: #222;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    padding: 0;
+    background-color: #000;
     overflow: hidden;
+    height: 100vh;
   }
-  #puzzle-container {
-    position: relative;
-    width: 90vw;
-    max-width: 400px;
-    aspect-ratio: 3/4;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    gap: 2px;
-  }
-  .piece {
-    background-size: cover;
-    background-position: center;
-    touch-action: none;
-  }
-  .empty {
-    background: #333;
-  }
-  #message {
+  #mensaje {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: #fff;
     text-align: center;
-    font-size: 1.2rem;
-    display: none;
-  }
-  button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    border: none;
-    background: #ff5e78;
-    color: #fff;
-    border-radius: 8px;
-    font-size: 1rem;
+    font-size: 1.8rem;
+    opacity: 0;
+    transition: opacity 2s;
   }
 </style>
 </head>
 <body>
 
-<div id="puzzle-container"></div>
+<canvas id="canvas"></canvas>
 
-<div id="message">
-  <h2>¡Perfecto! 🥰</h2>
-  <p>Te amo muchísimo ❤️</p>
-  <button onclick="location.href='rasca.html'">Seguir con la sorpresa</button>
+<div id="mensaje">
+  <h1>Te elijo hoy y siempre ❤️</h1>
+  <p>Sos mi todo, Jaz. No me canso de amarte.</p>
 </div>
 
 <script>
-  const container = document.getElementById('puzzle-container');
-  const imgURL = 'img/lover.jpeg'; // Ruta al archivo que subiste
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-  const rows = 3, cols = 3;
-  let pieces = [];
-  let emptyIndex = rows * cols - 1;
+const fireworks = [];
+const particles = [];
+const colors = ["#ff5252", "#ff4081", "#e040fb", "#7c4dff", "#40c4ff", "#00e676", "#ffff00"];
 
-  function init() {
-    for (let i = 0; i < rows * cols; i++) {
-      const div = document.createElement('div');
-      div.classList.add('piece');
-      if (i !== emptyIndex) {
-        div.style.backgroundImage = `url('${imgURL}')`;
-        const x = (i % cols) * 100 / (cols - 1);
-        const y = Math.floor(i / cols) * 100 / (rows - 1);
-        div.style.backgroundPosition = `${x}% ${y}%`;
-        div.dataset.index = i;
-        div.addEventListener('click', () => movePiece(i));
-      } else {
-        div.classList.add('empty');
-      }
-      pieces.push(div);
-      container.appendChild(div);
+function random(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+class Firework {
+  constructor() {
+    this.x = random(0, canvas.width);
+    this.y = canvas.height;
+    this.targetY = random(canvas.height / 4, canvas.height / 2);
+    this.speed = random(4, 7);
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+  }
+
+  update() {
+    this.y -= this.speed;
+    if (this.y <= this.targetY) {
+      this.explode();
+      return false;
     }
-    shuffle();
+    return true;
   }
 
-  function shuffle() {
-    for (let i = 0; i < 100; i++) {
-      const neighbors = getNeighbors(emptyIndex);
-      const rand = neighbors[Math.floor(Math.random() * neighbors.length)];
-      swap(rand, emptyIndex);
-      emptyIndex = rand;
-    }
-  }
-
-  function getNeighbors(index) {
-    const neighbors = [];
-    if (index % cols !== 0) neighbors.push(index - 1);
-    if (index % cols !== cols - 1) neighbors.push(index + 1);
-    if (index >= cols) neighbors.push(index - cols);
-    if (index < cols * (rows - 1)) neighbors.push(index + cols);
-    return neighbors;
-  }
-
-  function movePiece(index) {
-    if (getNeighbors(emptyIndex).includes(index)) {
-      swap(index, emptyIndex);
-      emptyIndex = index;
-      if (isSolved()) showMessage();
+  explode() {
+    for (let i = 0; i < 30; i++) {
+      particles.push(new Particle(this.x, this.y, this.color));
     }
   }
 
-  function swap(i, j) {
-    container.insertBefore(pieces[i], pieces[j]);
-    [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+  }
+}
+
+class Particle {
+  constructor(x, y, color) {
+    this.x = x;
+    this.y = y;
+    this.velX = random(-3, 3);
+    this.velY = random(-3, 3);
+    this.alpha = 1;
+    this.color = color;
   }
 
-  function isSolved() {
-    return pieces.every((piece, i) => +piece.dataset.index === i || i === emptyIndex);
+  update() {
+    this.x += this.velX;
+    this.y += this.velY;
+    this.alpha -= 0.02;
+    return this.alpha > 0;
   }
 
-  function showMessage() {
-    document.getElementById('message').style.display = 'block';
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.globalAlpha = this.alpha;
+    ctx.fill();
+    ctx.globalAlpha = 1;
   }
+}
 
-  init();
+function animate() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (Math.random() < 0.05) fireworks.push(new Firework());
+
+  fireworks.forEach((fw, i) => {
+    if (!fw.update()) fireworks.splice(i, 1);
+    else fw.draw();
+  });
+
+  particles.forEach((p, i) => {
+    if (!p.update()) particles.splice(i, 1);
+    else p.draw();
+  });
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+setTimeout(() => {
+  document.getElementById("mensaje").style.opacity = 1;
+}, 5000);
+
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
 </script>
 
 </body>
