@@ -8,6 +8,7 @@
     margin: 0;
     background: #ece5dd;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1rem;
   }
   #chat {
     max-width: 500px;
@@ -15,6 +16,10 @@
     padding: 10px;
     display: flex;
     flex-direction: column;
+    height: 90vh;
+    overflow-y: auto;
+    background: #ece5dd;
+    padding-bottom: 10px;
   }
   .msg-container {
     display: flex;
@@ -65,18 +70,34 @@
     min-width: 45px;
     text-align: center;
   }
-  /* Corazones azules estilo emoji grande */
-  .emoji-heart {
-    font-size: 1.8rem;
-    margin-top: 10px;
-    text-align: center;
-  }
-  /* Scroll container */
-  #chat {
-    height: 90vh;
-    overflow-y: auto;
-    background: #ece5dd;
-    padding-bottom: 10px;
+
+  /* MEDIA QUERY para pantallas chicas (celulares) */
+  @media (max-width: 600px) {
+    body {
+      font-size: 1.8rem; /* casi el doble */
+    }
+    #chat {
+      padding: 20px;
+    }
+    .msg-container {
+      margin: 16px 0;
+    }
+    .avatar {
+      width: 72px;
+      height: 72px;
+      margin: 0 16px;
+    }
+    .msg {
+      padding: 20px 28px;
+      border-radius: 24px;
+      font-size: 1.6rem;
+      max-width: 300px;
+    }
+    .time {
+      font-size: 1.2rem;
+      min-width: 60px;
+      margin: 0 10px;
+    }
   }
 </style>
 </head>
