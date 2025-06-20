@@ -8,23 +8,23 @@
     margin: 0;
     background: #ece5dd;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 1rem;
+    font-size: 2.5rem; /* tamaño base muy grande */
   }
   #chat {
     max-width: 500px;
     margin: 0 auto;
-    padding: 10px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     height: 90vh;
     overflow-y: auto;
     background: #ece5dd;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
   }
   .msg-container {
     display: flex;
     align-items: flex-end;
-    margin: 8px 0;
+    margin: 24px 0;
     max-width: 80%;
   }
   .msg-container.ella {
@@ -35,11 +35,11 @@
     margin-left: auto;
   }
   .avatar {
-    width: 36px;
-    height: 36px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
     overflow: hidden;
-    margin: 0 8px;
+    margin: 0 20px;
     flex-shrink: 0;
     background-color: #ccc;
   }
@@ -50,53 +50,53 @@
   }
   .msg {
     background: #fff;
-    padding: 10px 14px;
-    border-radius: 18px;
+    padding: 28px 40px;
+    border-radius: 30px;
     position: relative;
-    font-size: 1rem;
-    line-height: 1.4;
-    max-width: 250px;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    font-size: 2.5rem;
+    line-height: 1.5;
+    max-width: 350px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
   }
   .yo .msg {
     background: #dcf8c6;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   }
   .time {
-    font-size: 0.75rem;
+    font-size: 1.5rem;
     color: #999;
-    margin: 0 5px;
+    margin: 0 10px;
     user-select: none;
-    min-width: 45px;
+    min-width: 75px;
     text-align: center;
   }
 
   /* MEDIA QUERY para pantallas chicas (celulares) */
   @media (max-width: 600px) {
     body {
-      font-size: 1.8rem; /* casi el doble */
+      font-size: 3rem; /* aún más grande en celular */
     }
     #chat {
-      padding: 20px;
+      padding: 40px;
     }
     .msg-container {
-      margin: 16px 0;
+      margin: 30px 0;
     }
     .avatar {
-      width: 72px;
-      height: 72px;
-      margin: 0 16px;
+      width: 110px;
+      height: 110px;
+      margin: 0 25px;
     }
     .msg {
-      padding: 20px 28px;
-      border-radius: 24px;
-      font-size: 1.6rem;
-      max-width: 300px;
+      padding: 35px 50px;
+      border-radius: 36px;
+      font-size: 3rem;
+      max-width: 380px;
     }
     .time {
-      font-size: 1.2rem;
-      min-width: 60px;
-      margin: 0 10px;
+      font-size: 1.8rem;
+      min-width: 80px;
+      margin: 0 15px;
     }
   }
 </style>
