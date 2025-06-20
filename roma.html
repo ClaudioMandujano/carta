@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Chat Secreto 💙</title>
+<style>
+  body {
+    margin: 0;
+    background: #ece5dd;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  #chat {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  .msg-container {
+    display: flex;
+    align-items: flex-end;
+    margin: 8px 0;
+    max-width: 80%;
+  }
+  .msg-container.ella {
+    flex-direction: row;
+  }
+  .msg-container.yo {
+    flex-direction: row-reverse;
+    margin-left: auto;
+  }
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 8px;
+    flex-shrink: 0;
+    background-color: #ccc;
+  }
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .msg {
+    background: #fff;
+    padding: 10px 14px;
+    border-radius: 18px;
+    position: relative;
+    font-size: 1rem;
+    line-height: 1.4;
+    max-width: 250px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+  }
+  .yo .msg {
+    background: #dcf8c6;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+  }
+  .time {
+    font-size: 0.75rem;
+    color: #999;
+    margin: 0 5px;
+    user-select: none;
+    min-width: 45px;
+    text-align: center;
+  }
+  /* Corazones azules estilo emoji grande */
+  .emoji-heart {
+    font-size: 1.8rem;
+    margin-top: 10px;
+    text-align: center;
+  }
+  /* Scroll container */
+  #chat {
+    height: 90vh;
+    overflow-y: auto;
+    background: #ece5dd;
+    padding-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div id="chat"></div>
+
+<script>
+// URLs de avatar (podés cambiar por fotos tuyas o de ella)
+const avatarYo = 'https://i.ibb.co/cKGP1bXR/clau.png'; // avatar para "yo"
+const avatarElla = 'https://i.ibb.co/Ld5d5Ds0/jaz.png'; // avatar para "ella"
+
+const mensajes = [
+  { quien: 'yo', texto: "Hola amor 💙" },
+  { quien: 'yo', texto: "Te escribo esto por acá porque quería hacerlo especial." },
+  { quien: 'yo', texto: "Desde que te conocí, no dejo de pensar en vos." },
+  { quien: 'yo', texto: "Tu risa es mi sonido favorito." },
+  { quien: 'yo', texto: "Tus ojos son mi lugar." },
+  { quien: 'yo', texto: "Quiero que seas parte de cada momento de mi vida." },
+  { quien: 'yo', texto: "Te quiero como mi vida entera." },
+  { quien: 'yo', texto: "Te amo más de lo que puedo explicar." },
+  { quien: 'yo', texto: "💙💙💙💙💙" },
+  { quien: 'ella', texto: "❤️❤️❤️" }
+];
+
+// Función para obtener hora actual en formato hh:mm am/pm
+function getHora() {
+  const now = new Date();
+  let h = now.getHours();
+  const m = now.getMinutes().toString().padStart(2, '0');
+  const ampm = h >= 12 ? 'pm' : 'am';
+  h = h % 12 || 12;
+  return `${h}:${m} ${ampm}`;
+}
+
+let i = 0;
+const chat = document.getElementById('chat');
+
+function mostrarMensaje() {
+  if (i < mensajes.length) {
+    const m = mensajes[i];
+    const cont = document.createElement('div');
+    cont.classList.add('msg-container', m.quien);
+
+    const avatar = document.createElement('div');
+    avatar.classList.add('avatar');
+    const img = document.createElement('img');
+    img.src = m.quien === 'yo' ? avatarYo : avatarElla;
+    img.alt = m.quien === 'yo' ? 'Tu avatar' : 'Avatar de ella';
+    avatar.appendChild(img);
+
+    const msg = document.createElement('div');
+    msg.classList.add('msg');
+    msg.innerHTML = m.texto;
+
+    const hora = document.createElement('div');
+    hora.classList.add('time');
+    hora.textContent = getHora();
+
+    // Ordenar según quién envía
+    if (m.quien === 'yo') {
+      cont.appendChild(hora);
+      cont.appendChild(msg);
+      cont.appendChild(avatar);
+    } else {
+      cont.appendChild(avatar);
+      cont.appendChild(msg);
+      cont.appendChild(hora);
+    }
+
+    chat.appendChild(cont);
+    chat.scrollTop = chat.scrollHeight;
+
+    i++;
+    setTimeout(mostrarMensaje, 1800);
+  }
+}
+
+mostrarMensaje();
+</script>
+
+</body>
+</html>
