@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Destino: Vos 💙</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0a0f1a;
+      color: #00ccff;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+      position: relative;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .section {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      opacity: 1;
+      transition: opacity 1.5s ease;
+    }
+
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .message {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+      text-align: center;
+      height: 2em;
+      z-index: 2;
+    }
+
+    .dots {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      z-index: 2;
+    }
+
+    .dot {
+      width: 24px; /* tamaño de la imagen */
+      height: 24px;
+      position: absolute;
+      animation: fade 2s infinite alternate;
+      object-fit: contain;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .dot.highlight {
+      /* para destacar la imagen podés agregar filtros o sombra */
+      filter: drop-shadow(0 0 5px #00ccff);
+      animation: fade 2s infinite alternate;
+    }
+
+    @keyframes fade {
+      0% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    .final-message {
+      font-size: 1.7rem;
+      color: #66ccff;
+      margin-top: 30px;
+      animation: fadeIn 2s ease forwards;
+      z-index: 2;
+      text-align: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .hearts-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: transparent;
+      animation: floatUp 10s linear infinite;
+      opacity: 0.6;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 16px;
+      background-color: #3399ff;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      left: 0;
+      top: 0;
+    }
+
+    .heart::after {
+      left: 10px;
+      top: 0;
+    }
+
+    .heart {
+      transform: rotate(-45deg);
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) scale(1) rotate(-45deg);
+        opacity: 0.4;
+      }
+      100% {
+        transform: translateY(-10vh) scale(1.2) rotate(-45deg);
+        opacity: 0;
+      }
+    }
+
+    /* Carta */
+    .letter {
+      max-width: 320px;
+      padding: 20px;
+      background-color: #001f33;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #00ccff80;
+      text-align: center;
+      color: #b3e5ff;
+      font-size: 1.2rem;
+      animation: fadeIn 2s ease forwards;
+      white-space: pre-wrap;
+      line-height: 1.5;
+      z-index: 2;
+      word-break: normal;
+      overflow-wrap: normal;
+    }
+
+    .letter span {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: appear 0.5s forwards;
+      margin-right: 3px;
+    }
+
+    @keyframes appear {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hearts-container" id="hearts"></div>
+
+  <!-- Sección 1 -->
+  <div class="section" id="busqueda">
+    <div class="message" id="status">Buscando al amor de mi vida...</div>
+    <div class="dots" id="dots-container"></div>
+  </div>
+
+  <!-- Sección 2 -->
+  <div class="section hidden" id="carta">
+    <div class="letter" id="letter"></div>
+  </div>
+
+  <script>
+    const dotsContainer = document.getElementById('dots-container');
+    const status = document.getElementById('status');
+    const busqueda = document.getElementById('busqueda');
+    const carta = document.getElementById('carta');
+    const letterBox = document.getElementById('letter');
+
+    const totalDots = 30;
+    for (let i = 0; i < totalDots; i++) {
+      const dot = document.createElement('img');
+      dot.src = 'img/velez.png'; // Cambiá acá la ruta a tu PNG
+      dot.classList.add('dot');
+      dot.style.top = Math.random() * 180 + "px";
+      dot.style.left = Math.random() * 180 + "px";
+      dotsContainer.appendChild(dot);
+    }
+
+    // Simulación
+    setTimeout(() => {
+      status.textContent = "Jazmín Troilo encontrada...";
+    }, 2500);
+
+    setTimeout(() => {
+      const allDots = document.querySelectorAll('.dot');
+      const randomDot = allDots[Math.floor(Math.random() * allDots.length)];
+      randomDot.classList.add('highlight');
+      status.textContent = "Coincidencia encontrada en Lomas del Mirador.";
+    }, 5000);
+
+    // Transición
+    setTimeout(() => {
+      busqueda.classList.add('hidden');
+      carta.classList.remove('hidden');
+      mostrarCarta(`Coincidir con vos fue lo más inesperado…\nY lo más hermoso que me pasó. 💙\nCada momento con vos es un regalo del destino.\n\nNunca te voy a soltar.\nLlegué a tu vida para quedarme,\ny nunca dejaré de luchar, menos rendirme,\nhasta estar todos los días a tu lado,\nhasta formar nuestra familia y compartirlo todo con vos.\n\nTe amo con el alma, mi vida.`);
+    }, 9500);
+
+    // Mostrar carta animada palabra por palabra
+    function mostrarCarta(texto) {
+      letterBox.innerHTML = '';
+      const parrafos = texto.split('\n');
+      let delay = 0;
+      parrafos.forEach((parrafo, i) => {
+        const palabras = parrafo.split(' ');
+        palabras.forEach((palabra, j) => {
+          const span = document.createElement('span');
+          span.textContent = palabra;
+          span.style.opacity = 0;
+          span.style.transform = 'translateY(10px)';
+          span.style.animation = 'appear 0.5s forwards';
+          span.style.animationDelay = `${delay}s`;
+          letterBox.appendChild(span);
+          if (j !== palabras.length - 1) {
+            const espacio = document.createTextNode(' ');
+            letterBox.appendChild(espacio);
+          }
+          delay += 0.3;
+        });
+        if (i !== parrafos.length - 1) {
+          letterBox.appendChild(document.createElement('br'));
+        }
+      });
+    }
+
+    // Corazones flotantes
+    const heartsContainer = document.getElementById('hearts');
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = (6 + Math.random() * 4) + "s";
+      heartsContainer.appendChild(heart);
+      setTimeout(() => heart.remove(), 10000);
+    }
+    setInterval(createHeart, 400);
+  </script>
+
+</body>
+</html>
